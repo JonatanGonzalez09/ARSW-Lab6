@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+
+<body onload="init()">
+    <title>Blueprints</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="/webjars/jquery/3.1.0/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/webjars/bootstrap/4.1.2/css/bootstrap.min.css" />
+
+    <script type='text/javascript'>
+        function init() {
+            var canvas = document.getElementById("panelCanvas"),
+                ctx = canvas.getContext("2d");
+            var offset = getOffset(canvas);
+            if (window.PointerEvent) {
+                canvas.addEventListener("pointerdown", draw, false);
+            } else {
+                //Provide fallback for user agents that do not support Pointer Events
+                canvas.addEventListener("mousedown", draw, false);
+            }
+        }
+
+        function draw(event) {
+            var canvas = document.getElementById("panelCanvas"),
+            ctx = canvas.getContext("2d");
+            console.log("X: "+event.pageX);
+            console.log("Y: "+event.pageY);
+            console.log("Top: "+this.offsetTop);
+            console.log("Left: "+this.offsetLeft);
+            console.log("Parent: "+this.offsetParent);
+            console.log("Offset: "+this.offset);
+            console.log("EventX: "+event.pageX - (this.offsetLeft + this.parentElement.offsetLeft));
+            console.log("EventY:"+event.pageY - (this.offsetTop + this.parentElement.offsetTop));
+            ctx.fillRect(event.pageX - this.offsetTop, event.pageY - this.offsetTop, 5, 5);
+            
+        }
+
+        function getOffset(obj) {
+            var offsetLeft = 0;
+            var offsetTop = 0;
+            do {
+                if (!isNaN(obj.offsetLeft)) {
+                    offsetLeft += obj.offsetLeft;
+                }
+                if (!isNaN(obj.offsetTop)) {
+                    offsetTop += obj.offsetTop;
+                }
+            } while (obj = obj.offsetParent);
+            return {left: offsetLeft,top: offsetTop};
+        }
+    </script>
+
+    <h1>Blueprints </h1>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Author" id="author">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary"
+                        onclick="app.getBlueprintsByAuthor($('#author').val())">Get Blueprints</button>
+                </span>
+            </div>
+            <div class="col-lg-15">
+                <h2 id='tablaAuthor'>Author's blueprints</h2>
+                <table class='table' id='bluePrints'>
+                    <thead>
+                        <tr>
+                            <th scope='col'>Blueprint name</th>
+                            <th scope='col'>Number of points</th>
+                            <th scope='col'>Open</th>
+                        </tr>
+                    </thead>
+                </table>
+                <h3 id='puntosTotales'>Total user points:</h3>
+            </div>
+        </div>
+        <div class="col-lg-15">
+            <h2 id='nameBlueprint'>Current blueprint:</h2>
+            <canvas id='panelCanvas' name='canvas' height='500' width="500" style='border:1px solid blue'></canvas>
+        </div>
+        <div id="coords"></div>
+        <div id="pointerzone"></div>
+
+</body>
+<script src="js/apiclient.js"></script>
+<script src="js/apimock.js"></script>
+<script src="js/app.js"></script>
+
+</html>
