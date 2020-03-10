@@ -4,17 +4,21 @@ var apiRest = apimock;
 
 var app = (function () {
 
+    var puntos=[];
+    var authorActual;
+    var bluePrintActual;
+
     var getBlueprintsByAuthor = function (author) {
         return apiRest.getBlueprintsByAuthor(author, function (err, data) {
-            if (author==null) {
+            if (author == null) {
                 return new Error("Error al consultar los blueprints:" + err)
             }
-			alert(data);
+            alert(data);
             console.log("lista: " + apimock.getBlueprintsByAuthor);
             console.log("data: " + data);
             /*console.log("data: " + data[0].name);
             console.log("data: " + data[1].name);*/
-            console.log("author: " + author); 
+            console.log("author: " + author);
 
             $('#tablaAuthor').html(author + "'s blueprints");
             var table = $('#bluePrints')
@@ -62,11 +66,61 @@ var app = (function () {
             })
             ctx.stroke();
         })
+    };
+
+    function init() {
+        console.log("Ingreso a init");
+        var canvas = document.getElementById("panelCanvas"),
+            ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.beginPath();
+        if (window.PointerEvent) {
+            canvas.addEventListener("pointerdown", draw, false);
+        } else {
+            canvas.addEventListener("mousedown", draw, false);
+        }
     }
-    
+
+    function draw(event) {
+        console.log("pintando");
+        var canvas = document.getElementById("panelCanvas"),
+            ctx = canvas.getContext("2d");
+        var offset = getOffset(canvas);
+        var posX = event.pageX - offset.left;
+        var posY = event.pageY - offset.top;
+        ctx.lineTo(posX,posY);
+        ctx.fillRect(posX, posY, 3, 3);
+        
+    }
+
+    function getOffset(obj) {
+        var offsetLeft = 0;
+        var offsetTop = 0;
+        do {
+            if (!isNaN(obj.offsetLeft)) {
+                offsetLeft += obj.offsetLeft;
+            }
+            if (!isNaN(obj.offsetTop)) {
+                offsetTop += obj.offsetTop;
+            }
+        } while (obj = obj.offsetParent);
+        return {
+            left: offsetLeft,
+            top: offsetTop
+        };
+    }
+
+    function newBluePrint(author){
+        if (author == null || author == "") {
+            alert("Debe ingresar el numbre para el autor");
+        }
+        init();
+    }
+
     return {
         getBlueprintsByAuthor: getBlueprintsByAuthor,
-        getBlueprintsByNameAndAuthor: getBlueprintsByNameAndAuthor
+        getBlueprintsByNameAndAuthor: getBlueprintsByNameAndAuthor,
+        newBluePrint: newBluePrint
     }
 
 })();

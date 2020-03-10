@@ -38,7 +38,7 @@ dependencies {
     compile group: 'org.webjars', name: 'jquery', version: '3.1.0'
 
     /* SpringBoot */
-    /*compile group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '2.2.4.RELEASE', ext: 'pom'*/
+    /* compile group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '2.2.4.RELEASE', ext: 'pom' */
 
 
 }
